@@ -192,6 +192,11 @@ func Install() (err error) {
 		return
 	}
 
+	exe, err := os.Executable()
+	if err != nil {
+		return
+	}
+
 	serviceContent := []byte(
 		"[Unit]\n" +
 			"Description=" + projName + " Service\n" +
@@ -199,7 +204,7 @@ func Install() (err error) {
 			"[Service]\n" +
 			"Type=simple\n" +
 			"WorkingDirectory=" + wd +
-			"\nExecStart=" + wd + "/" + projName + " -c " + ConfDir +
+			"\nExecStart=" + exe + " -c " + ConfDir +
 			"\nRestart=on-failure\n" +
 			"RestartSec=2\n\n" +
 			"[Install]\n" +
@@ -219,7 +224,7 @@ func Uninstall() (err error) {
 		return errors.New("windows 暂不支持安装到系统")
 	}
 
-	wd, err := os.Getwd()
+	exe, err := os.Executable()
 	if err != nil {
 		return
 	}
@@ -229,6 +234,6 @@ func Uninstall() (err error) {
 	}
 
 	log.Println("卸载服务成功")
-	log.Println("若要完全删除，请移步到", wd, "和", ConfDir, "完全删除")
+	log.Println("若要完全删除，请移步到", exe, "和", ConfDir, "完全删除")
 	return
 }
